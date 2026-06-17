@@ -4,13 +4,15 @@
   --navy:#0d1620;
   --navy-card:#121e2b;
   --navy-border:rgba(195,255,90,0.12);
-  --lime:#c8ff4d;
-  --lime-dim:#a8e63d;
+  --lime:#bdf254;
+  --lime-dim:#9bd633;
   --ink:#0a1118;
   --white:#f4f7f2;
   --grey:#9fb0a8;
-  --light-bg:#f4f1ea;
-  --light-card:#ffffff;
+  --light-bg:#f2efe6;
+  --light-card:#fffdf8;
+  --neutral-accent:#e8e3d2;
+  --neutral-accent-text:#cfc9a8;
 
   --font-display:'Manrope', sans-serif;
   --font-body:'Inter', sans-serif;
@@ -29,7 +31,8 @@ body{
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
 }
-h1,h2,h3{font-family:var(--font-display); font-weight:800; letter-spacing:-0.02em;}
+h1,h2{font-family:var(--font-display); font-weight:800; letter-spacing:-0.02em;}
+h3{font-family:var(--font-display); font-weight:700; letter-spacing:-0.01em;}
 p{color:var(--grey); line-height:1.6;}
 a{text-decoration:none; color:inherit;}
 .wrap{max-width:1140px; margin:0 auto; padding:0 24px;}
@@ -85,7 +88,7 @@ a{text-decoration:none; color:inherit;}
   text-transform:uppercase; margin-bottom:20px;
 }
 .badge-light{
-  background:rgba(200,255,77,0.1); border:1px solid rgba(200,255,77,0.25); color:var(--lime);
+  background:rgba(232,227,210,0.1); border:1px solid rgba(232,227,210,0.22); color:var(--neutral-accent-text);
 }
 
 /* ===== HEADER ===== */
@@ -104,6 +107,16 @@ a{text-decoration:none; color:inherit;}
   background:radial-gradient(ellipse 80% 50% at 50% -10%, rgba(200,255,77,0.08), transparent 60%), var(--navy-deep);
 }
 .hero-grid{ display:grid; gap:56px; }
+.rating-strip{
+  display:flex; align-items:center; gap:8px; margin-bottom:18px;
+}
+.rating-strip-center{ justify-content:center; margin:18px auto 36px; }
+.rating-strip-center .rating-text{ color:#5a6b63; }
+.rating-strip-center .rating-text strong{ color:var(--navy-deep); }
+.rating-stars{ color:var(--lime); font-size:14px; letter-spacing:1px; }
+.rating-text{ font-size:13px; color:var(--grey); }
+.rating-text strong{ color:var(--white); font-family:var(--font-display); }
+
 .hero-copy h1{ font-size:clamp(2rem, 6vw, 2.6rem); line-height:1.12; margin-bottom:18px; color:var(--white); }
 .accent{ color:var(--lime); }
 .hero-sub{ font-size:16px; max-width:520px; margin-bottom:32px; }
@@ -111,11 +124,15 @@ a{text-decoration:none; color:inherit;}
 
 .hero-stats{ display:flex; gap:14px; flex-wrap:wrap; }
 .stat-pill{
-  display:flex; flex-direction:column; gap:2px;
+  display:flex; flex-direction:column; gap:2px; position:relative;
   background:var(--navy-card); border:1px solid var(--navy-border);
-  border-radius:var(--radius-md); padding:14px 18px; min-width:120px;
+  border-radius:var(--radius-md); padding:14px 18px 14px 20px; min-width:120px;
 }
-.stat-pill strong{ font-family:var(--font-display); color:var(--lime); font-size:20px; }
+.stat-pill::before{
+  content:''; position:absolute; left:0; top:14px; bottom:14px; width:3px;
+  background:var(--lime); border-radius:2px;
+}
+.stat-pill strong{ font-family:var(--font-display); color:var(--white); font-size:20px; }
 .stat-pill span{ font-size:12px; color:var(--grey); }
 
 .hero-visual{ position:relative; min-height:340px; }
@@ -194,6 +211,7 @@ h2{ font-size:clamp(1.7rem, 4vw, 2.3rem); line-height:1.2; }
 .service-card p{ color:var(--grey); font-size:14.5px; }
 .service-icon{ font-size:28px; margin-bottom:14px; }
 .price{ font-family:var(--font-display); font-size:30px; font-weight:800; color:var(--lime); margin:4px 0 10px; }
+.guarantee-line{ font-size:13px; color:var(--lime); font-weight:600; margin-top:10px; }
 
 .service-card.highlight{
   background:linear-gradient(160deg, var(--navy-card), #16263650);
@@ -221,8 +239,17 @@ h2{ font-size:clamp(1.7rem, 4vw, 2.3rem); line-height:1.2; }
 .areas{ background:var(--light-bg); text-align:center; }
 .areas h2, .areas p{ color:var(--navy-deep); }
 .areas p{ color:#5a6b63; margin-left:auto; margin-right:auto; }
+.trade-chips{
+  display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:24px;
+}
+.trade-chip{
+  font-size:13px; font-weight:600; color:var(--navy-deep);
+  background:rgba(10,17,24,0.05); padding:8px 16px; border-radius:var(--radius-pill);
+  border:1px solid rgba(10,17,24,0.08);
+}
+
 .area-grid{
-  display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:40px;
+  display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:32px;
 }
 .area-chip{
   background:var(--light-card); padding:12px 22px; border-radius:var(--radius-pill);
