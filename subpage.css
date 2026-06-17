@@ -7,7 +7,7 @@
 
 .page-hero{
   padding:48px 0 0;
-  background:radial-gradient(ellipse 80% 50% at 50% -10%, rgba(169,217,74,0.07), transparent 60%), var(--navy-deep);
+  background:radial-gradient(ellipse 80% 50% at 50% -10%, rgba(201,162,74,0.07), transparent 60%), var(--navy-deep);
 }
 .page-hero h1{
   font-size:clamp(1.9rem, 5.5vw, 2.5rem); color:var(--white); line-height:1.15; margin-bottom:16px;
@@ -29,7 +29,7 @@
   box-shadow:0 14px 30px -22px rgba(28,36,32,0.15);
 }
 .feature-item .check{
-  flex-shrink:0; width:28px; height:28px; border-radius:50%; background:rgba(169,217,74,0.15);
+  flex-shrink:0; width:28px; height:28px; border-radius:50%; background:rgba(201,162,74,0.15);
   color:var(--lime-dim); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px;
 }
 .feature-item h4{ color:var(--ink); font-family:var(--font-display); font-size:15.5px; margin-bottom:4px; }
@@ -37,7 +37,7 @@
 
 .pricing-callout{
   background:linear-gradient(160deg, #fffdf7, #f0ead8);
-  border:1px solid rgba(169,217,74,0.35); border-radius:var(--radius-lg);
+  border:1px solid rgba(201,162,74,0.35); border-radius:var(--radius-lg);
   padding:32px; text-align:center; margin:40px 0;
   box-shadow:0 16px 36px -26px rgba(28,36,32,0.18);
 }
