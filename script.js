@@ -37,14 +37,40 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    function spawnSparkles(card) {
+      const existing = card.querySelectorAll('.sparkle');
+      existing.forEach(s => s.remove());
+      const positions = [
+        { top: '-6%', left: '8%' },
+        { top: '4%', left: '88%' },
+        { top: '85%', left: '12%' },
+        { top: '92%', left: '82%' }
+      ];
+      positions.forEach((pos, i) => {
+        const s = document.createElement('span');
+        s.className = 'sparkle';
+        s.textContent = '✦';
+        s.style.top = pos.top;
+        s.style.left = pos.left;
+        s.style.animationDelay = (i * 0.08) + 's';
+        card.appendChild(s);
+        setTimeout(() => s.remove(), 1000);
+      });
+    }
+
     function render() {
+      let newCenterCard = null;
       cards.forEach((card, i) => {
         let diff = i - active;
         if (diff > total / 2) diff -= total;
         if (diff < -total / 2) diff += total;
-        card.setAttribute('data-pos', posLabel(diff));
+        const pos = posLabel(diff);
+        const wasCenter = card.getAttribute('data-pos') === 'center';
+        card.setAttribute('data-pos', pos);
+        if (pos === 'center' && !wasCenter) newCenterCard = card;
       });
       dots.forEach((dot, i) => dot.classList.toggle('active', i === active));
+      if (newCenterCard) spawnSparkles(newCenterCard);
     }
 
     function go(newIndex) {
