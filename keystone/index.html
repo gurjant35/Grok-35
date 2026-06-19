@@ -152,7 +152,7 @@ body{
 #hero{
   position:relative;min-height:100vh;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  overflow:hidden;text-align:center;padding:120px 24px 80px;
+  overflow:hidden;text-align:center;padding:140px 48px 100px;
 }
 /* Video background */
 .hero-video-wrap{
@@ -178,19 +178,20 @@ body{
 .hero-eyebrow{
   position:relative;z-index:2;
   font-size:11px;letter-spacing:.22em;text-transform:uppercase;
-  color:rgba(255,255,255,0.6);font-weight:500;margin-bottom:28px;
+  color:rgba(255,255,255,0.6);font-weight:500;margin-bottom:20px;
   opacity:0;animation:fadeUp .8s var(--ease) .3s forwards;
 }
 .hero-title{
   position:relative;z-index:2;
   font-family:'Syne',sans-serif;
-  font-size:clamp(40px,7vw,92px);
-  font-weight:800;line-height:1.0;
+  font-size:clamp(32px,4.8vw,68px);
+  font-weight:800;line-height:1.05;
   letter-spacing:-.03em;color:#f5f5f7;
-  max-width:900px;margin-bottom:28px;
+  max-width:820px;margin-bottom:28px;
   opacity:0;animation:fadeUp .9s var(--ease) .5s forwards;
+  text-align:center;
 }
-.hero-title em{font-style:italic;color:#a8cce0;font-weight:400}
+.hero-title em{font-style:italic;color:#a8cce0;font-weight:400;display:block;font-size:clamp(28px,4.2vw,60px);}
 .hero-sub{
   position:relative;z-index:2;
   font-size:15px;font-weight:300;color:rgba(255,255,255,0.72);
@@ -422,8 +423,8 @@ body{
 <body>
 
 <!-- CURSOR -->
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
+<div id="cursor" style="opacity:0"></div>
+<div id="cursor-ring" style="opacity:0"></div>
 
 <!-- SLIDE-OUT MENU OVERLAY -->
 <div id="menu-overlay">
@@ -679,10 +680,16 @@ const HALF_DOT  = 4;   // half of 8px dot
 const HALF_RING = 16;  // half of 32px ring
 
 // Dot follows mouse instantly via transform — zero lag
+let cursorVisible = false;
 document.addEventListener('mousemove', e => {
   mx = e.clientX;
   my = e.clientY;
   cursor.style.transform = 'translate3d(' + (mx - HALF_DOT) + 'px,' + (my - HALF_DOT) + 'px,0)';
+  if (!cursorVisible) {
+    cursorVisible = true;
+    cursor.style.opacity = '1';
+    ring.style.opacity = '1';
+  }
 }, { passive: true });
 
 // Ring lerps behind — intentional trailing effect, but fast
