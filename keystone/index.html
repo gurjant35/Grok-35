@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keystone Home Products Ltd. — Intelligence that feels.</title>
+<meta name="description" content="Aluminum sliding dividers, closet organizers, frameless shower doors, mirror walls, shower enclosures — Toronto, Brampton, Mississauga">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#faf8f5;
+  --ink2:#f2ede7;
+  --slate:#e8e2da;
+  --glass:rgba(0,0,0,0.03);
+  --glass-border:rgba(0,0,0,0.09);
+  --ghost:rgba(0,0,0,0.04);
+  --white:#1a1814;
+  --dim:rgba(20,18,14,0.6);
+  --muted:rgba(20,18,14,0.35);
+  --accent:#2c4a5e;
+  --accent2:#3d6b8a;
+  --pill-bg:rgba(0,0,0,0.05);
+  --pill-border:rgba(0,0,0,0.12);
+  --r-pill:999px;
+  --r-card:18px;
+  --r-lg:28px;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--ink);
+  color:var(--white);
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cursor{
+  position:fixed;width:8px;height:8px;
+  background:#1a1814;border-radius:50%;
+  pointer-events:none;z-index:9999;
+  top:0;left:0;
+  will-change:transform;
+  mix-blend-mode:multiply;
+  transition:width .2s ease,height .2s ease;
+}
+#cursor-ring{
+  position:fixed;width:32px;height:32px;
+  border:1.5px solid rgba(20,18,14,0.4);border-radius:50%;
+  pointer-events:none;z-index:9998;
+  top:0;left:0;
+  will-change:transform;
+  mix-blend-mode:multiply;
+  transition:width .2s ease,height .2s ease,border-color .2s ease;
+}
+
+/* ── FLOATING HEADER ── */
+#header{
+  position:fixed;top:16px;left:50%;transform:translateX(-50%);
+  z-index:1000;
+  width:calc(100% - 40px);max-width:1200px;
+  background:rgba(250,248,245,0.88);
+  backdrop-filter:blur(28px) saturate(180%);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  border:1px solid rgba(0,0,0,0.1);
+  border-radius:var(--r-pill);
+  padding:9px 14px 9px 18px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  transition:background .4s var(--ease);
+  flex-wrap:nowrap;
+}
+.h-logo{
+  font-family:'Syne',sans-serif;font-weight:700;font-size:13px;
+  letter-spacing:-.01em;white-space:nowrap;color:var(--white);
+  text-decoration:none;flex-shrink:0;
+}
+.h-logo span{display:block;font-size:9px;font-weight:400;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;line-height:1.2}
+.h-center{display:flex;align-items:center;gap:5px;flex-shrink:0;flex-wrap:nowrap;}
+.pill{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 13px;border-radius:var(--r-pill);
+  font-size:11.5px;font-weight:500;letter-spacing:.02em;
+  border:1px solid var(--pill-border);
+  background:var(--pill-bg);
+  color:var(--dim);cursor:pointer;
+  transition:all .25s var(--ease);
+  white-space:nowrap;text-decoration:none;
+  backdrop-filter:blur(8px);
+}
+.pill:hover,.pill.active{background:rgba(255,255,255,0.12);color:var(--white);border-color:rgba(255,255,255,0.22)}
+.pill.bright{background:var(--white);color:var(--ink);border-color:transparent;font-weight:600}
+.pill.bright:hover{background:var(--accent);color:var(--ink2)}
+.pill-dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.6}
+.h-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.avatar-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--glass);border:1px solid var(--glass-border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;cursor:pointer;transition:all .2s;
+}
+.avatar-btn:hover{background:rgba(255,255,255,0.1)}
+
+/* ── SLIDE-OUT MENU ── */
+#menu-overlay{
+  position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;
+  transition:opacity .4s;
+}
+#menu-overlay.open{opacity:1;pointer-events:all}
+#menu-panel{
+  position:fixed;top:0;right:0;bottom:0;width:360px;
+  background:rgba(245,242,238,0.98);
+  backdrop-filter:blur(40px);
+  border-left:1px solid var(--glass-border);
+  padding:100px 44px 44px;
+  transform:translateX(100%);
+  transition:transform .5s var(--ease);
+  z-index:1001;
+  display:flex;flex-direction:column;gap:0;
+}
+#menu-overlay.open #menu-panel{transform:translateX(0)}
+.menu-close{
+  position:absolute;top:24px;right:24px;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.1);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:16px;color:rgba(20,18,14,0.5);
+  transition:all .2s;
+}
+.menu-close:hover{background:rgba(0,0,0,0.1);color:#1a1814}
+.menu-section{margin-bottom:36px}
+.menu-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:16px}
+.menu-link{
+  display:block;font-family:'Syne',sans-serif;font-size:22px;font-weight:600;
+  color:rgba(20,18,14,0.5);text-decoration:none;
+  padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.07);
+  transition:color .2s,padding-left .2s;
+}
+.menu-link:hover{color:#1a1814;padding-left:10px}
+.menu-sub-link{
+  display:block;font-size:13px;color:rgba(20,18,14,0.45);text-decoration:none;
+  padding:7px 0;transition:color .2s;
+}
+.menu-sub-link:hover{color:rgba(20,18,14,0.75)}
+
+/* ── HERO ── */
+#hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;text-align:center;padding:120px 24px 80px;
+}
+/* Video background */
+.hero-video-wrap{
+  position:absolute;inset:0;z-index:0;overflow:hidden;
+}
+#hero-video{
+  width:100%;height:100%;object-fit:cover;
+  display:block;
+  filter:brightness(0.55) saturate(0.7);
+}
+.hero-video-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(6,6,8,0.45) 0%,
+    rgba(6,6,8,0.25) 40%,
+    rgba(6,6,8,0.65) 80%,
+    rgba(6,6,8,0.95) 100%
+  );
+}
+/* Orb canvas sits above video for depth glow */
+#hero-canvas{position:absolute;inset:0;z-index:1;opacity:.28;mix-blend-mode:screen;}
+.hero-eyebrow{
+  position:relative;z-index:2;
+  font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(255,255,255,0.6);font-weight:500;margin-bottom:28px;
+  opacity:0;animation:fadeUp .8s var(--ease) .3s forwards;
+}
+.hero-title{
+  position:relative;z-index:2;
+  font-family:'Syne',sans-serif;
+  font-size:clamp(40px,7vw,92px);
+  font-weight:800;line-height:1.0;
+  letter-spacing:-.03em;color:#f5f5f7;
+  max-width:900px;margin-bottom:28px;
+  opacity:0;animation:fadeUp .9s var(--ease) .5s forwards;
+}
+.hero-title em{font-style:italic;color:#a8cce0;font-weight:400}
+.hero-sub{
+  position:relative;z-index:2;
+  font-size:15px;font-weight:300;color:rgba(255,255,255,0.72);
+  max-width:520px;line-height:1.75;margin-bottom:52px;
+  opacity:0;animation:fadeUp .9s var(--ease) .7s forwards;
+}
+.hero-pills{
+  position:relative;z-index:2;
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+  opacity:0;animation:fadeUp .8s var(--ease) .9s forwards;
+}
+.hero-scroll{
+  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:0;animation:fadeUp .8s var(--ease) 1.2s forwards;
+}
+.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,rgba(255,255,255,0.6),transparent)}
+.scroll-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+
+/* ── TUNNEL SECTION ── */
+#tunnel{
+  position:relative;height:100vh;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  background:#08080c;
+}
+#tunnel-canvas{position:absolute;inset:0;z-index:0}
+.tunnel-content{
+  position:relative;z-index:2;text-align:center;padding:0 24px;
+  max-width:780px;
+}
+.tunnel-heading{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(32px,6vw,72px);font-weight:800;
+  letter-spacing:-.03em;line-height:1;
+  color:var(--white);min-height:1.1em;
+}
+.tunnel-body{
+  font-size:16px;font-weight:300;color:rgba(255,255,255,0.65);
+  line-height:1.8;margin-top:28px;max-width:580px;margin-left:auto;margin-right:auto;
+}
+.tunnel-geo{
+  margin-top:28px;font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:rgba(255,255,255,0.35);
+}
+
+/* ── METRICS SECTION ── */
+#metrics{padding:120px 40px;max-width:1180px;margin:0 auto;position:relative;}
+.metrics-header{margin-bottom:72px}
+.section-eyebrow{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);font-weight:600;margin-bottom:14px}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,50px);font-weight:700;letter-spacing:-.025em;line-height:1.15;color:var(--white)}
+.metric-row{
+  display:flex;align-items:center;gap:32px;
+  padding:28px 0;border-top:1px solid var(--glass-border);
+  cursor:pointer;transition:all .3s;
+}
+.metric-row:last-child{border-bottom:1px solid var(--glass-border)}
+.metric-row:hover .metric-bar-fill{opacity:1}
+.metric-row:hover .metric-stat{color:var(--white)}
+.metric-stat{
+  font-family:'Syne',sans-serif;font-size:clamp(22px,3vw,38px);
+  font-weight:700;letter-spacing:-.02em;color:var(--dim);
+  min-width:280px;transition:color .3s;
+  flex-shrink:0;
+}
+.metric-stat small{font-size:.45em;font-weight:400;display:block;letter-spacing:.05em;color:var(--muted);font-family:'Inter',sans-serif;margin-top:4px}
+.metric-bar-track{flex:1;height:2px;background:rgba(255,255,255,0.07);border-radius:2px;position:relative;overflow:hidden}
+.metric-bar-fill{
+  height:100%;border-radius:2px;
+  background:linear-gradient(90deg,var(--accent2),var(--accent));
+  opacity:.5;transition:width 1.4s var(--ease),opacity .3s;
+  width:0;
+}
+.metric-arrow{color:var(--muted);font-size:18px;transition:transform .3s,color .3s;flex-shrink:0}
+.metric-row:hover .metric-arrow{transform:translateX(6px);color:var(--white)}
+/* Cat expand */
+.cat-panel{
+  overflow:hidden;max-height:0;transition:max-height .5s var(--ease);
+  padding:0 0 0 312px;
+}
+.cat-panel.open{max-height:200px}
+.cat-grid{
+  display:flex;gap:10px;flex-wrap:wrap;padding:16px 0 24px;
+}
+.cat-tag{
+  padding:6px 14px;border-radius:var(--r-pill);
+  font-size:12px;color:var(--dim);
+  border:1px solid var(--glass-border);
+  background:var(--glass);
+  transition:all .2s;
+}
+.cat-tag:hover{background:rgba(255,255,255,0.1);color:var(--white)}
+
+/* ── CARD STACK SECTION ── */
+#cards{padding:120px 40px;position:relative;overflow:hidden;background:var(--ink2);}
+.cards-wrapper{max-width:1180px;margin:0 auto}
+.cards-header{margin-bottom:72px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px}
+.cards-tagline{font-family:'Syne',sans-serif;font-size:clamp(13px,1.5vw,17px);font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.card-stack{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+}
+.feature-card{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  border-radius:var(--r-card);
+  padding:36px 30px 32px;
+  position:relative;overflow:hidden;
+  transition:transform .4s var(--ease),border-color .3s,background .3s;
+  cursor:pointer;
+}
+.feature-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 70% 20%,rgba(120,155,181,0.08) 0%,transparent 65%);
+  opacity:0;transition:opacity .4s;
+}
+.feature-card:hover{transform:translateY(-6px);border-color:rgba(255,255,255,0.16);background:rgba(255,255,255,0.06)}
+.feature-card:hover::before{opacity:1}
+.card-num{font-size:11px;letter-spacing:.18em;color:var(--muted);font-weight:600;text-transform:uppercase;margin-bottom:24px}
+.card-title-sm{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--white);margin-bottom:16px;line-height:1.25}
+.card-body{font-size:13.5px;color:var(--dim);line-height:1.78;font-weight:300}
+.card-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  margin-top:28px;font-size:12px;font-weight:600;letter-spacing:.06em;
+  color:var(--accent2);text-transform:uppercase;text-decoration:none;
+  transition:gap .2s,color .2s;
+}
+.card-cta:hover{gap:14px;color:var(--white)}
+.card-icon{
+  position:absolute;top:28px;right:28px;
+  font-size:28px;opacity:.25;
+  transition:opacity .3s,transform .4s var(--ease);
+}
+.feature-card:hover .card-icon{opacity:.5;transform:scale(1.1) rotate(-5deg)}
+
+/* Partner logos */
+.partner-row{
+  margin-top:72px;display:flex;align-items:center;gap:0;
+  border-top:1px solid var(--glass-border);
+  border-bottom:1px solid var(--glass-border);
+}
+.partner-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);padding:22px 32px 22px 0;border-right:1px solid var(--glass-border);min-width:140px;flex-shrink:0}
+.partner-logos{display:flex;gap:0;flex:1;overflow:hidden}
+.partner-logo{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:22px 20px;border-right:1px solid var(--glass-border);
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:.08em;color:var(--muted);transition:color .25s;
+  text-transform:uppercase;
+}
+.partner-logo:hover{color:rgba(255,255,255,.5)}
+
+/* ── FOOTER / TERMINAL ── */
+#footer{position:relative;padding:100px 40px 0;overflow:hidden;border-top:1px solid rgba(0,0,0,0.1);background:#0f0e0c;}
+.marquee-wrap{overflow:hidden;border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);padding:28px 0;margin-bottom:80px}
+.marquee-track{display:flex;gap:80px;white-space:nowrap;animation:marquee 18s linear infinite}
+.marquee-text{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(28px,5vw,56px);font-weight:800;
+  letter-spacing:-.02em;color:rgba(255,255,255,0.08);
+  flex-shrink:0;
+}
+.marquee-text span{color:rgba(255,255,255,0.18)}
+
+.footer-body{max-width:1180px;margin:0 auto}
+.footer-desc{
+  font-size:15px;font-weight:300;color:rgba(255,255,255,0.45);
+  max-width:520px;line-height:1.8;margin-bottom:52px;
+}
+.footer-pills{display:flex;gap:10px;margin-bottom:80px;flex-wrap:wrap}
+
+.footer-grid{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:52px;padding-bottom:60px;border-bottom:1px solid var(--glass-border);
+}
+.fg-domain{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(11px,1.6vw,15px);
+  font-weight:700;color:rgba(255,255,255,.15);
+  letter-spacing:-.01em;word-break:break-all;
+  line-height:1.2;margin-bottom:24px;
+  transition:color .3s;cursor:default;
+}
+.fg-domain:hover{color:rgba(255,255,255,.3)}
+.fg-address{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.9;font-weight:300}
+.fg-address a{color:#7ab0cc;text-decoration:none;transition:color .2s}
+.fg-address a:hover{color:#fff}
+
+.fc-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.3);font-weight:600;margin-bottom:18px}
+.fc-links{list-style:none;display:flex;flex-direction:column;gap:11px}
+.fc-links a{font-size:13px;color:rgba(255,255,255,0.38);text-decoration:none;transition:color .2s,padding-left .2s;display:block}
+.fc-links a:hover{color:rgba(255,255,255,0.85);padding-left:6px}
+
+.footer-bottom{
+  max-width:1180px;margin:0 auto;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:22px 0;font-size:11px;color:rgba(255,255,255,.25);
+  flex-wrap:wrap;gap:12px;
+}
+
+/* ── KEYFRAMES ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .card-stack{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:36px}
+  .metric-stat{min-width:200px;font-size:22px}
+  .cat-panel.open{padding:0 0 0 232px}
+}
+@media(max-width:640px){
+  #header{padding:10px 14px;top:12px;width:calc(100% - 24px)}
+  .h-center{display:none}
+  .card-stack{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  #metrics{padding:80px 20px}
+  #cards{padding:80px 20px}
+  #footer{padding:80px 20px 0}
+  .metric-stat{min-width:0;font-size:18px}
+  .cat-panel.open{padding:0}
+  .partner-logos{flex-wrap:wrap}
+  .partner-logo{min-width:50%}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- SLIDE-OUT MENU OVERLAY -->
+<div id="menu-overlay">
+  <div id="menu-panel">
+    <button class="menu-close" id="menu-close-btn">✕</button>
+    <div class="menu-section">
+      <p class="menu-label">Navigation</p>
+      <a href="#hero" class="menu-link" onclick="closeMenu()">Home</a>
+      <a href="#cards" class="menu-link" onclick="closeMenu()">About Us</a>
+      <a href="#" class="menu-link" onclick="closeMenu()">Warranty</a>
+      <a href="#" class="menu-link" onclick="closeMenu()">Blog</a>
+      <a href="#footer" class="menu-link" onclick="closeMenu()">Privacy Policy</a>
+    </div>
+    <div class="menu-section">
+      <p class="menu-label">Product Galleries</p>
+      <a href="#" class="menu-sub-link">Mirror Doors and Walls</a>
+      <a href="#" class="menu-sub-link">Aluminum Dividers</a>
+      <a href="#" class="menu-sub-link">Shower Doors &amp; Enclosures</a>
+      <a href="#" class="menu-sub-link">Sliding Tub Doors</a>
+    </div>
+    <div style="margin-top:auto;padding-top:24px;border-top:1px solid var(--glass-border)">
+      <p style="font-size:12px;color:var(--muted);">Keystone Home Products Ltd.<br>1730 Steeles Ave. East, Unit #4-7<br>Brampton, ON L6T 1A4</p>
+    </div>
+  </div>
+</div>
+
+<!-- FLOATING HEADER -->
+<header id="header">
+  <a href="#hero" class="h-logo">
+    Keystone Home Products
+    <span>Ltd. · Precision Since Day One</span>
+  </a>
+  <div class="h-center">
+    <button class="pill active" onclick="this.classList.toggle('active')"><span class="pill-dot"></span> Grid View</button>
+    <a href="#metrics" class="pill">Glass</a>
+    <a href="#cards" class="pill">Storage</a>
+  </div>
+  <div class="h-right">
+    <a href="#footer" class="avatar-btn" title="Contact">✉</a>
+    <a href="#footer" class="pill bright">System Review</a>
+    <button class="pill" id="menu-open-btn" title="Menu">☰</button>
+  </div>
+</header>
+
+<!-- SECTION 1: HERO -->
+<section id="hero">
+  <!-- VIDEO BACKGROUND -->
+  <div class="hero-video-wrap">
+    <video id="hero-video" autoplay muted loop playsinline>
+      <source src="/hero.mp4" type="video/mp4">
+    </video>
+    <div class="hero-video-overlay"></div>
+  </div>
+  <!-- ORBS on top for extra depth -->
+  <canvas id="hero-canvas"></canvas>
+  <p class="hero-eyebrow">Toronto · Brampton · Mississauga · The GTA</p>
+  <h1 class="hero-title">Keystone Home Products:<br><em>Intelligence that feels.</em></h1>
+  <p class="hero-sub">Precision Engineering. Bridging the gap between structural utility and domestic aesthetics for a smarter, more connected space.</p>
+  <div class="hero-pills">
+    <button class="pill active">Aluminum</button>
+    <button class="pill">Glass</button>
+    <button class="pill">Fixtures</button>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <p class="scroll-label">Scroll</p>
+  </div>
+</section>
+
+<!-- SECTION 2: TUNNEL -->
+<section id="tunnel">
+  <canvas id="tunnel-canvas"></canvas>
+  <div class="tunnel-content">
+    <h2 class="tunnel-heading" id="tunnel-heading">NEXT-GEN SYSTEMS</h2>
+    <p class="tunnel-body">At Keystone, we believe in creating environments where structural spaces don't just host life, but truly connect with human movement.</p>
+    <p class="tunnel-geo">Aluminum &amp; mirror sliding doors &amp; enclosures — Toronto, Brampton, Mississauga</p>
+  </div>
+</section>
+
+<!-- SECTION 3: METRICS -->
+<section>
+  <div id="metrics">
+    <div class="metrics-header">
+      <p class="section-eyebrow">Performance Data</p>
+      <h2 class="section-title">Built on numbers<br>backed by craft.</h2>
+    </div>
+
+    <div class="metric-row" onclick="toggleCat(0)">
+      <div class="metric-stat">97%<small>Operational Efficiency</small></div>
+      <div class="metric-bar-track"><div class="metric-bar-fill" data-w="97"></div></div>
+      <div class="metric-arrow">→</div>
+    </div>
+    <div class="cat-panel" id="cat-0">
+      <div class="cat-grid">
+        <span class="cat-tag">Mirror Doors &amp; Walls</span>
+        <span class="cat-tag">Panel Doors</span>
+        <span class="cat-tag">Aluminum Dividers</span>
+        <span class="cat-tag">Glass Shower Doors</span>
+      </div>
+    </div>
+
+    <div class="metric-row" onclick="toggleCat(1)">
+      <div class="metric-stat">12K+<small>Custom Installations</small></div>
+      <div class="metric-bar-track"><div class="metric-bar-fill" data-w="82"></div></div>
+      <div class="metric-arrow">→</div>
+    </div>
+    <div class="cat-panel" id="cat-1">
+      <div class="cat-grid">
+        <span class="cat-tag">Shower Enclosures</span>
+        <span class="cat-tag">Frameless Shower Doors</span>
+        <span class="cat-tag">Sliding Tub Doors</span>
+      </div>
+    </div>
+
+    <div class="metric-row" onclick="toggleCat(2)">
+      <div class="metric-stat">30+<small>Years Industry Excellence</small></div>
+      <div class="metric-bar-track"><div class="metric-bar-fill" data-w="90"></div></div>
+      <div class="metric-arrow">→</div>
+    </div>
+    <div class="cat-panel" id="cat-2">
+      <div class="cat-grid">
+        <span class="cat-tag">Closet Organizers</span>
+        <span class="cat-tag">Wood Shelving</span>
+        <span class="cat-tag">Wire Shelving</span>
+        <span class="cat-tag">Storage Solutions</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: CARD STACK -->
+<section id="cards">
+  <div class="cards-wrapper">
+    <div class="cards-header">
+      <div>
+        <p class="section-eyebrow">Editorial Showcase</p>
+        <h2 class="section-title">Touching tomorrow,<br>today.</h2>
+      </div>
+      <p class="cards-tagline">Three perspectives.<br>One vision.</p>
+    </div>
+
+    <div class="card-stack">
+      <div class="feature-card">
+        <div class="card-icon">🏗</div>
+        <p class="card-num">01 — About Keystone</p>
+        <h3 class="card-title-sm">Built on experience. Driven by results.</h3>
+        <p class="card-body">Our experience in the construction industry has given us a knowledge base about the needs of the job. We understand the challenges in home building and work with builders to solve problems and deliver our product to meet their schedule. Our philosophy is simple — we would like to do whatever the job requires to get it done right. The difference is how you solve problems, not just yours but your clients'.</p>
+        <a href="#footer" class="card-cta">Read More →</a>
+      </div>
+      <div class="feature-card">
+        <div class="card-icon">🚿</div>
+        <p class="card-num">02 — Shower Enclosures</p>
+        <h3 class="card-title-sm">Your ideal shower experience to life.</h3>
+        <p class="card-body">An escape, a place to relax and unwind, or invigorate and start the day. Whatever you are dreaming of, Keystone Home Products can help you bring your ideal shower experience to life. From frameless glass to fully enclosed systems, every installation is engineered to perform and crafted to impress.</p>
+        <a href="#footer" class="card-cta">Read More →</a>
+      </div>
+      <div class="feature-card">
+        <div class="card-icon">🪟</div>
+        <p class="card-num">03 — Closet &amp; Mirror Doors</p>
+        <h3 class="card-title-sm">Space without compromise.</h3>
+        <p class="card-body">Sliding closet doors are a smart alternative to traditional wooden doors. Traditional doors swing in the room reducing usable space. Sliding doors allow for greater access with no compromise in your usable space — and mirror panels make any room feel larger and brighter.</p>
+        <a href="#footer" class="card-cta">Read More →</a>
+      </div>
+    </div>
+
+    <div class="partner-row">
+      <p class="partner-label">Industry Partners</p>
+      <div class="partner-logos">
+        <div class="partner-logo">BuildTech GTA</div>
+        <div class="partner-logo">Brampton Builds</div>
+        <div class="partner-logo">GTA Contractors</div>
+        <div class="partner-logo">Ontario Glass Guild</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: FOOTER TERMINAL -->
+<footer id="footer">
+  <div class="marquee-wrap">
+    <div class="marquee-track" id="marquee-track">
+      <span class="marquee-text">Keystone Home Products: <span>Where Human Intuition Meets Material Space.</span></span>
+      <span class="marquee-text">Keystone Home Products: <span>Where Human Intuition Meets Material Space.</span></span>
+      <span class="marquee-text">Keystone Home Products: <span>Where Human Intuition Meets Material Space.</span></span>
+    </div>
+  </div>
+
+  <div class="footer-body">
+    <p class="footer-desc">Our structural engineering is optimized to provide the pinnacle of interior design flexibility, introducing endless possibilities in home layouts, manufacturing, and everyday life.</p>
+    <div class="footer-pills">
+      <a href="tel:9057900997" class="pill bright">Request Quote</a>
+      <a href="#metrics" class="pill">All Systems</a>
+      <a href="#" class="pill">Frameless Shower Doors</a>
+      <a href="#" class="pill">Closet Organizers</a>
+    </div>
+
+    <div class="footer-grid">
+      <div>
+        <div class="fg-domain">keystonehomeproducts.com</div>
+        <p class="fg-address">
+          Keystone Home Products<br>
+          1730 Steeles Ave. East, Unit #4-7<br>
+          Brampton, ON, Canada L6T 1A4<br><br>
+          <a href="tel:9057900997">(905) 790-0997</a><br>
+          <a href="mailto:info@keystonehomeproducts.com">info@keystonehomeproducts.com</a>
+        </p>
+      </div>
+      <div>
+        <p class="fc-label">Products</p>
+        <ul class="fc-links">
+          <li><a href="#">Mirror Doors &amp; Walls</a></li>
+          <li><a href="#">Aluminum Dividers</a></li>
+          <li><a href="#">Shower Enclosures</a></li>
+          <li><a href="#">Frameless Shower Doors</a></li>
+          <li><a href="#">Sliding Tub Doors</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="fc-label">Storage</p>
+        <ul class="fc-links">
+          <li><a href="#">Closet Organizers</a></li>
+          <li><a href="#">Wood Shelving</a></li>
+          <li><a href="#">Wire Shelving</a></li>
+          <li><a href="#">Panel Doors</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="fc-label">Company</p>
+        <ul class="fc-links">
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#cards">About Us</a></li>
+          <li><a href="#">Warranty</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#hero">↑ Return to top</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>Copyright © 2026 · Keystone Home Products Ltd. All rights reserved.</span>
+    <span>Web design by Indexmedia.</span>
+  </div>
+</footer>
+
+<script>
+// ── CURSOR — instant dot, smooth ring ──
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursor-ring');
+let mx=0, my=0, rx=0, ry=0;
+const HALF_DOT  = 4;   // half of 8px dot
+const HALF_RING = 16;  // half of 32px ring
+
+// Dot follows mouse instantly via transform — zero lag
+document.addEventListener('mousemove', e => {
+  mx = e.clientX;
+  my = e.clientY;
+  cursor.style.transform = 'translate3d(' + (mx - HALF_DOT) + 'px,' + (my - HALF_DOT) + 'px,0)';
+}, { passive: true });
+
+// Ring lerps behind — intentional trailing effect, but fast
+let rafId;
+function lerpRing() {
+  rx += (mx - rx) * 0.22;
+  ry += (my - ry) * 0.22;
+  ring.style.transform = 'translate3d(' + (rx - HALF_RING) + 'px,' + (ry - HALF_RING) + 'px,0)';
+  rafId = requestAnimationFrame(lerpRing);
+}
+lerpRing();
+
+// Hover expand
+document.querySelectorAll('a,button,.pill,.metric-row,.feature-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width  = '16px';
+    cursor.style.height = '16px';
+    ring.style.width    = '48px';
+    ring.style.height   = '48px';
+    ring.style.borderColor = 'rgba(255,255,255,0.8)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width  = '8px';
+    cursor.style.height = '8px';
+    ring.style.width    = '32px';
+    ring.style.height   = '32px';
+    ring.style.borderColor = 'rgba(255,255,255,0.5)';
+  });
+});
+
+// ── MENU ──
+const overlay=document.getElementById('menu-overlay');
+document.getElementById('menu-open-btn').addEventListener('click',()=>overlay.classList.add('open'));
+document.getElementById('menu-close-btn').addEventListener('click',()=>overlay.classList.remove('open'));
+overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('open')});
+function closeMenu(){overlay.classList.remove('open')}
+
+// ── HERO CANVAS – fluid orb animation ──
+(function(){
+  const canvas=document.getElementById('hero-canvas');
+  const ctx=canvas.getContext('2d');
+  let w,h,orbs=[];
+  function resize(){w=canvas.width=canvas.offsetWidth;h=canvas.height=canvas.offsetHeight}
+  resize();window.addEventListener('resize',resize);
+  for(let i=0;i<7;i++)orbs.push({
+    x:Math.random()*1,y:Math.random()*1,
+    r:.18+Math.random()*.22,
+    vx:(Math.random()-.5)*.0003,vy:(Math.random()-.5)*.0003,
+    hue:190+Math.random()*60,sat:30+Math.random()*30,lit:15+Math.random()*20,
+    phase:Math.random()*Math.PI*2,speed:.0004+Math.random()*.0008
+  });
+  let t=0;
+  function draw(){
+    t++;ctx.clearRect(0,0,w,h);
+    orbs.forEach(o=>{
+      o.x+=o.vx+Math.sin(t*o.speed+o.phase)*.0002;
+      o.y+=o.vy+Math.cos(t*o.speed+o.phase)*.0002;
+      if(o.x<-.3)o.x=1.3;if(o.x>1.3)o.x=-.3;
+      if(o.y<-.3)o.y=1.3;if(o.y>1.3)o.y=-.3;
+      const gx=o.x*w,gy=o.y*h,gr=o.r*Math.max(w,h);
+      const g=ctx.createRadialGradient(gx,gy,0,gx,gy,gr);
+      g.addColorStop(0,`hsla(${o.hue},${o.sat}%,${o.lit}%,.55)`);
+      g.addColorStop(.5,`hsla(${o.hue},${o.sat}%,${o.lit}%,.15)`);
+      g.addColorStop(1,`hsla(${o.hue},${o.sat}%,${o.lit}%,0)`);
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(gx,gy,gr,0,Math.PI*2);ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── TUNNEL CANVAS – corridor effect ──
+(function(){
+  const canvas=document.getElementById('tunnel-canvas');
+  const ctx=canvas.getContext('2d');
+  let w,h;
+  function resize(){w=canvas.width=canvas.offsetWidth;h=canvas.height=canvas.offsetHeight}
+  resize();window.addEventListener('resize',resize);
+  let t=0;
+  function draw(){
+    t+=.012;
+    ctx.fillStyle='rgba(8,8,12,0.18)';
+    ctx.fillRect(0,0,w,h);
+    const cx=w/2,cy=h/2;
+    // draw converging lines (tunnel)
+    const numLines=28;
+    for(let i=0;i<numLines;i++){
+      const angle=(i/numLines)*Math.PI*2;
+      const depth=(t%1);
+      const len=Math.max(w,h)*.75;
+      const startR=20+depth*len;
+      const endR=startR+len*.18;
+      const ax=cx+Math.cos(angle)*startR,ay=cy+Math.sin(angle)*startR;
+      const bx=cx+Math.cos(angle)*endR,by=cy+Math.sin(angle)*endR;
+      const alpha=Math.max(0,.35*(1-startR/(len+20)));
+      ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);
+      ctx.strokeStyle=`rgba(120,155,185,${alpha})`;ctx.lineWidth=.8;ctx.stroke();
+    }
+    // rings
+    for(let r=60;r<Math.max(w,h);r+=80){
+      const shifted=(r+(t*800))%Math.max(w,h);
+      if(shifted>30){
+        const a=Math.max(0,.3*(1-shifted/Math.max(w,h)));
+        ctx.beginPath();ctx.arc(cx,cy,shifted,0,Math.PI*2);
+        ctx.strokeStyle=`rgba(140,170,200,${a})`;ctx.lineWidth=.6;ctx.stroke();
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── TUNNEL HEADING TRANSITION ──
+const headings=['NEXT-GEN SYSTEMS','CRAFTED GLASS ENGINEERING','PRECISION ALUMINUM','KEYSTONE QUALITY'];
+let hi=0;
+const th=document.getElementById('tunnel-heading');
+setInterval(()=>{
+  th.style.opacity='0';th.style.transform='translateY(12px)';
+  setTimeout(()=>{
+    hi=(hi+1)%headings.length;
+    th.textContent=headings[hi];
+    th.style.transition='opacity .7s ease,transform .7s ease';
+    th.style.opacity='1';th.style.transform='translateY(0)';
+  },500);
+},3200);
+th.style.transition='opacity .7s ease,transform .7s ease';
+
+// ── METRIC BARS (Intersection Observer) ──
+const bars=document.querySelectorAll('.metric-bar-fill');
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const w=e.target.dataset.w;
+      setTimeout(()=>{e.target.style.width=w+'%'},200);
+    }
+  });
+},{threshold:.3});
+bars.forEach(b=>obs.observe(b));
+
+// ── METRIC CAT TOGGLE ──
+function toggleCat(i){
+  const panel=document.getElementById('cat-'+i);
+  const isOpen=panel.classList.contains('open');
+  document.querySelectorAll('.cat-panel').forEach(p=>p.classList.remove('open'));
+  if(!isOpen)panel.classList.add('open');
+}
+
+// ── PILL TOGGLE ──
+document.querySelectorAll('.hero-pills .pill').forEach(p=>{
+  p.addEventListener('click',()=>{
+    document.querySelectorAll('.hero-pills .pill').forEach(x=>x.classList.remove('active'));
+    p.classList.add('active');
+  });
+});
+
+// ── CARD TILT on hover ──
+document.querySelectorAll('.feature-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const rect=card.getBoundingClientRect();
+    const xPct=((e.clientX-rect.left)/rect.width-.5)*2;
+    const yPct=((e.clientY-rect.top)/rect.height-.5)*2;
+    card.style.transform=`translateY(-6px) rotateX(${-yPct*4}deg) rotateY(${xPct*5}deg)`;
+    card.style.transition='transform .1s';
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='';
+    card.style.transition='transform .4s cubic-bezier(0.16,1,0.3,1)';
+  });
+});
+
+// ── SCROLL REVEAL ──
+const revealEls=document.querySelectorAll('.metric-row,.feature-card,.partner-row,.footer-grid');
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>{
+        e.target.style.opacity='1';
+        e.target.style.transform='translateY(0)';
+      },i*80);
+      revObs.unobserve(e.target);
+    }
+  });
+},{threshold:.1});
+revealEls.forEach(el=>{
+  el.style.opacity='0';el.style.transform='translateY(24px)';
+  el.style.transition='opacity .7s cubic-bezier(0.16,1,0.3,1),transform .7s cubic-bezier(0.16,1,0.3,1)';
+  revObs.observe(el);
+});
+
+// ── HEADER scroll shrink ──
+window.addEventListener('scroll',()=>{
+  const h=document.getElementById('header');
+  if(window.scrollY>80){h.style.background='rgba(250,248,245,0.96)'}
+  else{h.style.background='rgba(250,248,245,0.88)'}
+});
+
+// ── DUPLICATE MARQUEE for seamless loop ──
+(function(){
+  const track=document.getElementById('marquee-track');
+  track.innerHTML+=track.innerHTML;
+})();
+</script>
+</body>
+</html>
